@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Damil HQ</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1F3864">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <style>
   :root { --navy:#1F3864; --bg:#f5f4ef; --card:#ffffff; --text:#2c2c2a; --muted:#8a887f; --green:#3B6D11; --amber:#BA7517; }
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -45,7 +49,7 @@
 <div class="card">
   <h2>Today's non-negotiables</h2>
   <div id="habits"></div>
-  <div class="done-msg" id="allDone">All done. Never miss twice stays unbroken. 🔗</div>
+  <div class="done-msg" id="allDone">All done. Never miss twice stays unbroken.</div>
   <div class="rule">Never miss twice.</div>
 </div>
 
@@ -77,7 +81,7 @@ $("today").textContent = new Date().toLocaleDateString("en-NZ", {weekday:"long",
 const targets = [["cd-wedding","2027-01-15"],["cd-semester","2027-02-15"],["cd-fb","2027-05-01"],["cd-grad","2027-06-30"]];
 targets.forEach(([id,date]) => {
   const days = Math.ceil((new Date(date) - new Date()) / 86400000);
-  $(id).textContent = days > 0 ? days + " days" : "🎉";
+  $(id).textContent = days > 0 ? days + " days" : "done!";
 });
 
 let hist = load("habitHistory", {});
@@ -100,9 +104,9 @@ function renderHabits() {
     if (!checked) all = false;
     const div = document.createElement("div");
     div.className = "habit";
-    div.innerHTML = `<input type="checkbox" id="cb-${h.id}" ${checked ? "checked" : ""}>
-      <label for="cb-${h.id}">${h.label}</label>
-      <span class="streak">${streak(h.id) > 0 ? "🔥 " + streak(h.id) : ""}</span>`;
+    div.innerHTML = '<input type="checkbox" id="cb-' + h.id + '"' + (checked ? " checked" : "") + '>' +
+      '<label for="cb-' + h.id + '">' + h.label + '</label>' +
+      '<span class="streak">' + (streak(h.id) > 0 ? "🔥 " + streak(h.id) : "") + '</span>';
     div.querySelector("input").addEventListener("change", e => {
       hist[tk][h.id] = e.target.checked;
       save("habitHistory", hist);
@@ -149,6 +153,7 @@ function drawChart() {
   $("wLost").textContent = (lost >= 0 ? "Down " : "Up ") + Math.abs(lost) + " kg";
 }
 drawChart();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 </script>
 </body>
 </html>
